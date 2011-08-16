@@ -51,7 +51,7 @@
 #import "modelUtil.h"
 #import "imageUtil.h"
 
-@interface NSGLView : NSOpenGLView {
+@interface NSGLView : NSView {
 	CVDisplayLinkRef displayLink;
 
 }

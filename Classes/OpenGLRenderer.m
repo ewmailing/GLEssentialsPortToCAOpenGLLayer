@@ -52,6 +52,62 @@
 #import "sourceUtil.h"
 
 
+#define GetGLFramebufferStatus()									\
+{														\
+GLenum err = glCheckFramebufferStatus(GL_FRAMEBUFFER);							\
+if (err != GL_FRAMEBUFFER_COMPLETE) { \
+	switch(err) \
+	{ \
+		case GL_FRAMEBUFFER_UNDEFINED: \
+		{ \
+			NSLog(@"GL_FRAMEBUFFER_UNDEFINED set in File:%s Line:%d\n",	__FILE__, __LINE__);	\
+			break; \
+		} \
+		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: \
+		{ \
+			NSLog(@"GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT set in File:%s Line:%d\n",	__FILE__, __LINE__);	\
+			break; \
+		} \
+		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: \
+		{ \
+			NSLog(@"GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT set in File:%s Line:%d\n",	__FILE__, __LINE__);	\
+			break; \
+		} \
+		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER: \
+		{ \
+			NSLog(@"GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER set in File:%s Line:%d\n",	__FILE__, __LINE__);	\
+			break; \
+		} \
+		case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER: \
+		{ \
+			NSLog(@"GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER set in File:%s Line:%d\n",	__FILE__, __LINE__);	\
+			break; \
+		} \
+		case GL_FRAMEBUFFER_UNSUPPORTED: \
+		{ \
+			NSLog(@"GL_FRAMEBUFFER_UNSUPPORTED set in File:%s Line:%d\n",	__FILE__, __LINE__);	\
+			break; \
+		} \
+		case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE: \
+		{ \
+			NSLog(@"GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE set in File:%s Line:%d\n",	__FILE__, __LINE__);	\
+			break; \
+		} \
+/* \
+		case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS: \
+		{ \
+			NSLog(@"GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS set in File:%s Line:%d\n",	__FILE__, __LINE__);	\
+			break; \
+		} \
+*/ \
+		default: \
+		{ \
+			NSLog(@"glCheckFramebufferStatus default set in File:%s Line:%d\n",	__FILE__, __LINE__);	\
+		} \
+	} \
+} \
+}
+
 #define GetGLError()									\
 {														\
 	GLenum err = glGetError();							\
@@ -142,13 +198,14 @@ GLboolean _useVBOs;
 #if RENDER_REFLECTION
 	
 	// Bind our refletion FBO and render our scene
-	
 	glBindFramebuffer(GL_FRAMEBUFFER, _reflectFBOName);
-	
+	GetGLError();
+	GetGLFramebufferStatus();
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, _reflectWidth, _reflectHeight);
-	
+	GetGLError();
+
 	mtxLoadPerspective(projection, 90, (float)_reflectWidth / (float)_reflectHeight,5.0,10000);
 
 	mtxLoadIdentity(modelView);
@@ -165,21 +222,26 @@ GLboolean _useVBOs;
 	
 	// Use the program that we previously created
 	glUseProgram(_characterPrgName);
-	
+	GetGLError();
+
 	// Set the modelview projection matrix that we calculated above
 	// in our vertex shader
 	glUniformMatrix4fv(_characterMvpUniformIdx, 1, GL_FALSE, mvp);
-	
+	GetGLError();
+
 	// Bind our vertex array object
 	glBindVertexArray(_characterVAOName);
-	
+	GetGLError();
+
 	// Bind the texture to be used
 	glBindTexture(GL_TEXTURE_2D, _characterTexName);
-	
+	GetGLError();
+
 	// Cull front faces now that everything is flipped 
 	// with our inverted reflection transformation matrix
 	glCullFace(GL_FRONT);
-	
+	GetGLError();
+
 	// Draw our object
 	if(_useVBOs)
 	{
@@ -189,19 +251,26 @@ GLboolean _useVBOs;
 	{
 		glDrawElements(GL_TRIANGLES, _characterNumElements, _characterElementType, _characterModel->elements);
 	}
-	
+	GetGLError();
+
 	// Bind our default FBO to render to the screen
 	glBindFramebuffer(GL_FRAMEBUFFER, _defaultFBOName);
+	GetGLError();
 
 	glViewport(0, 0, _viewWidth, _viewHeight);
-	
+	GetGLError();
+
 #endif // RENDER_REFLECTION
-	
+	GetGLError();
+	GetGLFramebufferStatus();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+	GetGLError();
+	GetGLFramebufferStatus();
+
 	// Use the program for rendering our character
 	glUseProgram(_characterPrgName);
-	
+	GetGLError();
+
 	// Calculate the projection matrix
 	mtxLoadPerspective(projection, 90, (float)_viewWidth / (float)_viewHeight,5.0,10000);
 	
@@ -217,17 +286,21 @@ GLboolean _useVBOs;
 	// Have our shader use the modelview projection matrix 
 	// that we calculated above
 	glUniformMatrix4fv(_characterMvpUniformIdx, 1, GL_FALSE, mvp);
-	
+	GetGLError();
+
 	// Bind the texture to be used
 	glBindTexture(GL_TEXTURE_2D, _characterTexName);
-	
+	GetGLError();
+
 	// Bind our vertex array object
 	glBindVertexArray(_characterVAOName);
-	
+	GetGLError();
+
 	// Cull back faces now that we no longer render 
 	// with an inverted matrix
 	glCullFace(GL_BACK);
-	
+	GetGLError();
+
 	// Draw our character
 	if(_useVBOs)
 	{
@@ -237,12 +310,14 @@ GLboolean _useVBOs;
 	{
 		glDrawElements(GL_TRIANGLES, _characterNumElements, _characterElementType, _characterModel->elements);
 	}
-	
+	GetGLError();
+
 #if RENDER_REFLECTION
 	
 	// Use our shader for reflections
 	glUseProgram(_reflectPrgName);
-	
+	GetGLError();
+
 	mtxLoadTranslate(modelView, 0, -50, -250);
 	
 	// Multiply the modelview and projection matrix and set it in the shader
@@ -251,11 +326,13 @@ GLboolean _useVBOs;
 	// Set the modelview matrix that we calculated above
 	// in our vertex shader
 	glUniformMatrix4fv(_reflectModelViewUniformIdx, 1, GL_FALSE, modelView);
-	
+	GetGLError();
+
 	// Set the projection matrix that we calculated above
 	// in our vertex shader
 	glUniformMatrix4fv(_reflectProjectionUniformIdx, 1, GL_FALSE, mvp);
-	
+	GetGLError();
+
 	float normalMatrix[9];
 	
 	// Calculate the normal matrix so that we can 
@@ -270,9 +347,11 @@ GLboolean _useVBOs;
 	
 	// Set the normal matrix for our shader to use
 	glUniformMatrix3fv(_reflectNormalMatrixUniformIdx, 1, GL_FALSE, normalMatrix);
-		
+	GetGLError();
+
 	// Bind the texture we rendered-to above (i.e. the reflection texture)
 	glBindTexture(GL_TEXTURE_2D, _reflectTexName);
+	GetGLError();
 
 #if !ESSENTIAL_GL_PRACTICES_IPHONE_OS
 	// Generate mipmaps from the rendered-to base level
@@ -280,11 +359,14 @@ GLboolean _useVBOs;
 	// This call is not accelarated on iOS 4 so do not use
 	//   mipmaps here
 	glGenerateMipmap(GL_TEXTURE_2D);
+	GetGLError();
+
 #endif
 	
 	// Bind our vertex array object
 	glBindVertexArray(_reflectVAOName);
-	
+	GetGLError();
+
 	// Draw our refection plane
 	if(_useVBOs)
 	{
@@ -294,6 +376,8 @@ GLboolean _useVBOs;
 	{
 		glDrawElements(GL_TRIANGLES, _quadNumElements, _quadElementType, _quadModel->elements);
 	}
+	GetGLError();
+
 #endif // RENDER_REFLECTION
 	
 	// Update the angle so our character keeps spinning
@@ -900,7 +984,8 @@ static GLsizei GetGLTypeSize(GLenum type)
 	if((self = [super init]))
 	{
 		NSLog(@"%s %s", glGetString(GL_RENDERER), glGetString(GL_VERSION));
-		
+		GetGLError();
+	
 		////////////////////////////////////////////////////
 		// Build all of our and setup initial state here  //
 		// Don't wait until our real time run loop begins //
@@ -1019,12 +1104,14 @@ static GLsizei GetGLTypeSize(GLenum type)
 		// Get the texture we created in buildReflectFBO by binding the 
 		// reflection FBO and getting the buffer attached to color 0
 		glBindFramebuffer(GL_FRAMEBUFFER, _reflectFBOName);
+		GetGLError();
 		
 		GLint iReflectTexName;
 		
 		glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                               GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME,
                                               &iReflectTexName);
+		GetGLError();
 		
 		_reflectTexName = ((GLuint*)(&iReflectTexName))[0];
 		
@@ -1073,13 +1160,16 @@ static GLsizei GetGLTypeSize(GLenum type)
 		
 		// Depth test will always be enabled
 		glEnable(GL_DEPTH_TEST);
+		GetGLError();
 	
 		// We will always cull back faces for better performance
 		glEnable(GL_CULL_FACE);
+		GetGLError();
 		
 		// Always use this clear color
 		glClearColor(0.5f, 0.4f, 0.5f, 1.0f);
-		
+		GetGLError();
+
 		// Draw our scene once without presenting the rendered image.
 		//   This is done in order to pre-warm OpenGL
 		// We don't need to present the buffer since we don't actually want the 

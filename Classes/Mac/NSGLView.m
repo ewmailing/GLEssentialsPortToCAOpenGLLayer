@@ -47,12 +47,13 @@
 
 #import "NSGLView.h"
 #import "OpenGLRenderer.h"
+#import "ExampleCAOpenGLLayer.h"
 
-@interface NSGLView (PrivateMethods)
-- (void) initGL;
+@interface NSGLView ( )
+//- (void) initGL;
 - (void) drawView;
 
-OpenGLRenderer* _renderer;
+// OpenGLRenderer* _renderer;
 @end
 
 @implementation NSGLView
@@ -77,8 +78,22 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     return result;
 }
 
+
+-(void)setupCAOpenGLLayer
+{
+	ExampleCAOpenGLLayer* exampleCAOpenGLLayer = [ExampleCAOpenGLLayer layer];
+	
+	// Layers start life validated (unlike views).
+	// We request that the layer have its contents drawn so that it can display something.
+	[exampleCAOpenGLLayer setNeedsDisplay];
+	
+	self.layer = exampleCAOpenGLLayer;
+}
+
+
 - (id) initWithFrame:(NSRect)frameRect
 {
+#if 0
 	NSOpenGLPixelFormatAttribute attrs[] =
 	{
 		NSOpenGLPFADoubleBuffer,
@@ -97,12 +112,23 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	{
 		NSLog(@"No OpenGL pixel format");
 	}
-	
 	self = [super initWithFrame:frameRect pixelFormat:[pf autorelease]];
+#endif	
 	
+	
+	self = [super initWithFrame:frameRect];
+
 	return self;
 }
 
+- (void)awakeFromNib
+{
+	[self setupCAOpenGLLayer];
+	NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 target:self selector:@selector(drawView) userInfo:nil repeats:YES];
+	[timer retain]; //LEAK
+}
+
+#if 0
 - (void) prepareOpenGL
 {
 	[super prepareOpenGL];
@@ -125,7 +151,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	// Activate the display link
 	CVDisplayLinkStart(displayLink);
 }
-
+#endif
+#if 0
 - (void) initGL
 {
 	// Make this openGL context current to the thread
@@ -139,11 +166,13 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	// Init our renderer.  Use 0 for the defaultFBO which is appropriate for MacOS (but not iOS)
 	_renderer = [[OpenGLRenderer alloc] initWithDefaultFBO:0];
 }
+#endif
 
 - (void) reshape
 {	
 	[super reshape];
-	
+#if 0
+
 	// We draw on a secondary thread through the display link
 	// When resizing the view, -reshape is called automatically on the main thread
 	// Add a mutex around to avoid the threads accessing the context simultaneously when resizing
@@ -154,10 +183,12 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	[_renderer resizeWithWidth:rect.size.width AndHeight:rect.size.height];
 	
 	CGLUnlockContext([[self openGLContext] CGLContextObj]);
+#endif
 }
 
 - (void) drawView
 {	 
+#if 0
 	[[self openGLContext] makeCurrentContext];
 
 	// We draw on a secondary thread through the display link
@@ -167,14 +198,20 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
 	[_renderer render];
 	
+
+	
 	CGLFlushDrawable([[self openGLContext] CGLContextObj]);
 	CGLUnlockContext([[self openGLContext] CGLContextObj]);
+#else
+	[self.layer setNeedsDisplay];
+
+#endif
 }
 
 - (void) dealloc
 {	
 	
-	[_renderer release];
+//	[_renderer release];
 	
 	// Release the display link
 	CVDisplayLinkRelease(displayLink);

@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0012407813F6044D009A4AC5 /* ExampleCAOpenGLLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0012407713F6044D009A4AC5 /* ExampleCAOpenGLLayer.m */; };
+		0012407A13F609C6009A4AC5 /* OpenGLRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1598D511B9DDC5001E7AB5 /* OpenGLRenderer.m */; };
 		3A1598CE11B9DDB0001E7AB5 /* vectorUtil.c in Sources */ = {isa = PBXBuildFile; fileRef = 3A1598C411B9DDB0001E7AB5 /* vectorUtil.c */; };
 		3A1598D011B9DDB0001E7AB5 /* modelUtil.c in Sources */ = {isa = PBXBuildFile; fileRef = 3A1598C811B9DDB0001E7AB5 /* modelUtil.c */; };
 		3A1598D111B9DDB0001E7AB5 /* matrixUtil.c in Sources */ = {isa = PBXBuildFile; fileRef = 3A1598CA11B9DDB0001E7AB5 /* matrixUtil.c */; };
 		3A1598D211B9DDB0001E7AB5 /* imageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1598CB11B9DDB0001E7AB5 /* imageUtil.m */; };
-		3A1598DB11B9DDC5001E7AB5 /* OpenGLRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1598D511B9DDC5001E7AB5 /* OpenGLRenderer.m */; };
 		3A1598DC11B9DDC5001E7AB5 /* NSGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1598D711B9DDC5001E7AB5 /* NSGLView.m */; };
 		3A1598DD11B9DDC5001E7AB5 /* MacGLEssentialsAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1598D911B9DDC5001E7AB5 /* MacGLEssentialsAppDelegate.m */; };
 		3A1598E211B9DDF3001E7AB5 /* reflect.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 3A1598DE11B9DDF3001E7AB5 /* reflect.vsh */; };
@@ -30,6 +31,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0012407613F6044D009A4AC5 /* ExampleCAOpenGLLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleCAOpenGLLayer.h; sourceTree = "<group>"; };
+		0012407713F6044D009A4AC5 /* ExampleCAOpenGLLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleCAOpenGLLayer.m; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		256AC3F00F4B6AF500CF3369 /* MacGLEssentials_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacGLEssentials_Prefix.pch; sourceTree = "<group>"; };
@@ -88,6 +91,8 @@
 				3A1598D911B9DDC5001E7AB5 /* MacGLEssentialsAppDelegate.m */,
 				3A1598D811B9DDC5001E7AB5 /* NSGLView.h */,
 				3A1598D711B9DDC5001E7AB5 /* NSGLView.m */,
+				0012407613F6044D009A4AC5 /* ExampleCAOpenGLLayer.h */,
+				0012407713F6044D009A4AC5 /* ExampleCAOpenGLLayer.m */,
 				3A1598D611B9DDC5001E7AB5 /* OpenGLRenderer.h */,
 				3A1598D511B9DDC5001E7AB5 /* OpenGLRenderer.m */,
 			);
@@ -260,10 +265,11 @@
 				3A1598D011B9DDB0001E7AB5 /* modelUtil.c in Sources */,
 				3A1598D111B9DDB0001E7AB5 /* matrixUtil.c in Sources */,
 				3A1598D211B9DDB0001E7AB5 /* imageUtil.m in Sources */,
-				3A1598DB11B9DDC5001E7AB5 /* OpenGLRenderer.m in Sources */,
 				3A1598DC11B9DDC5001E7AB5 /* NSGLView.m in Sources */,
 				3A1598DD11B9DDC5001E7AB5 /* MacGLEssentialsAppDelegate.m in Sources */,
 				3A349C9212CAEA1100B73A51 /* sourceUtil.c in Sources */,
+				0012407813F6044D009A4AC5 /* ExampleCAOpenGLLayer.m in Sources */,
+				0012407A13F609C6009A4AC5 /* OpenGLRenderer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,26 +310,28 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = "";
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PREBINDING = NO;
-				SDKROOT = "";
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
